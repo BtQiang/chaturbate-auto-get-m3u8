@@ -1,10 +1,10 @@
-<div align="center"><h1>Chaturbate-Grabber - Simping Stream from CB & SC</h1></div>
+<div align="center"><h1>Chaturbate-Grabber | CtbCap</h1></div>
 
-<div align="center"><p><code>Chaturbate-Grabber</code> | <code>CtbCap</code> Is a functional, reliable, yet extremely easy to use and lightweight <strong>Recorder</strong> and <strong>Watchbot</strong> for <code>Chaturbate</code> & <code>StripChat</code>.</p></div>
+<div align="center"><p>Chaturbate-Grabber/CtbCap is a Functional, Reliable, Easy to Use, yet Extremely Lightweight <strong>Recorder</strong>/<strong>Watchbot</strong> for Chaturbate|StripChat.</p></div>
 
-<div align="center"><p><strong><a href="#command-examples">Command Examples</a></strong></p></div>
+<div align="center"><p><strong><a href="#official-ctbcap-container-registry">Official Container Registry</a></strong></p></div>
 
-<div align="center"><h2>Key Advantages:</h2></div>
+<div align="center"><h2>Key Advantages</h2></div>
 
 - **Lightweight** - Written by most basic Shell Scripts with full POSIX compatibility. [Pythonless](https://m.media-amazon.com/images/I/71CmeuB3XXL._AC_UF1000,1000_QL80_.jpg), but far superior performance and energy efficiency.
 
@@ -12,154 +12,102 @@
 
     > Considering all the things mentioned and their platform versatility, this pretty much means you can run it on any device with only need internet connection: your phone, refrigerator, slipper, TV remote, [buttplug](https://news.berkeley.edu/wp-content/uploads/2017/10/SaguaroCardon750.jpg), even [your boss's wig](https://m.media-amazon.com/images/I/71+B81wFylL._SX466_.jpg).
 
-- **Multifunction** - Auto Recording; Auto Monitoring; Auto Stopping; Large-Scale Deploy... Just find by yourself.
+- **Multifunction** - Auto Recording; Auto Monitoring; Auto Stopping; Large-Scale Deployment... Just find by yourself.
 
-<div align="center"><h2>Usage | Deploy:</h2></div>
+<div align="center"><h2>Usage | Deploy</h2></div>
 
-### One-Command to GO:
+### **Launch with One-Command:**
 
 > Yeah, 1 Line, Just Crazy.
 
-  1. Open your whatever terminal & drop this:
-
-      ```shell
-      sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -h
-      ```
-      > Put the options after the `@`, e.g:\
-      > `sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -ef ~/rec your_mom`
-
-      > **Termux is Supported.**
-
-##
-
-### Raw Environment:
-
-> Traditional way to run. All platforms available - Running directly on naked system environment, dependencies will load into your OS.
-
 > **Termux is Supported.**
 
-   1. Make sure your OS has `curl` and `ffmpeg` command.
+  - Open your whatever terminal & drop this:
 
-   2. Clone this repo to your local:
+    ```shell
+    sh -c "$(curl -sL https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -h
+    ```
+    > Put the options after `@` . e.g:\
+    > `sh -c <...curl...stuff...> @ -ef ~/rec your_mom`
 
-      ```shell
-      git clone https://github.com/KFERMercer/chaturbate-grabber.git && cd chaturbate-grabber
-      ```
-
-   3. Launch:
-
-      ```shell
-      ./ctbcap
-      ```
-
-### Follow Update:
-
-  1. Go to local repo:
-
-      ```shell
-      cd chaturbate-grabber
-      ```
-
-  2. Update repo to newest commit:
-
-      ```shell
-      git pull --rebase
-      ```
+    > You can also choose to download | upgrade CtbCap to your local:\
+    > `curl -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap -o ctbcap && chmod +x ctbcap`\
+    > After its done, run `./ctbcap` to launch CtbCap.
 
 ##
 
-### Docker Container (Recommend) :
+### **Docker Container (Recommend) :**
 
 > If you're using such platforms that have good support for Docker or similar, I highly recommend to use this method: More serious; High-Availability; Everything runs in containers; Easily configures lot of chatrooms at the same time.
 
-  1. Clone this repo to your local:
+#### **Official CtbCap Container Registry:**
 
-      ```shell
-      git clone https://github.com/KFERMercer/chaturbate-grabber.git && cd chaturbate-grabber
-      ```
+  - [Docker Hub](https://hub.docker.com/r/kfermercer/ctbcap): `docker pull kfermercer/ctbcap:latest`
 
-  2. Install & trigger some Docker-like shit in your OS:
+  - [GitHub Package](https://github.com/KFERMercer/chaturbate-grabber/pkgs/container/ctbcap): `docker pull ghcr.io/kfermercer/ctbcap:latest`
 
-      ```shell
-      # <https://www.google.com/search?q=please+tell+me+how+to+use+docker+I+will+do+anything>
-      ```
+| Platform | Available |
+| :-: | :-: |
+| x86 | ✅ |
+| x86_64 | ✅ |
+| armhf | ✅ |
+| armv7 | ✅ |
+| aarch64 | ✅ |
+| loongarch64 | ✅ |
+| ppc64le | ✅ |
+| riscv64 | ✅ |
+| s390x | ✅ |
+> **CtbCap will always deliver on the [Compatibility Promise](https://news.berkeley.edu/wp-content/uploads/2017/10/SaguaroCardon750.jpg).**
 
-  3. Build | Rebuild the docker image:
+#### **Run As Compose Daemon (Recommend)** :
 
-      ```shell
-      docker build -t ctbcap ./
-      ```
-      > It will build a minimal FFmpeg tailored for ctbcap on-the-fly in Docker for minimizes the image size. (~ 18MB)
+  1. Custom your own compose file:
 
-      > You can also chose Pre-built FFmpeg from Alpine repos to avoids compilation on low-power devices. But it will increases image size significantly. (~ 140MB)\
-      > Use this command to use pre-built FFmpeg:\
-      > `docker build --build-arg BUILD_TARGET=fat --target fat -t ctbcap ./`
+     ```shell
+     curl -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/docker-compose.sample.yml -o ctbcap-compose.yml
+     ```
+     Then edit `./ctbcap-compose.yml` to configure.
 
-  4. RUN SIMP RUN!
+  2. Deploy the compose daemon:
 
-     - Run once (Docker CLI) :
+     ```shell
+     # Run as background daemon:
+     docker compose -f ./ctbcap-compose.yml up -d --remove-orphans
 
-        ```shell
-        docker run -t --rm \
-        -u $(id -u):$(id -g) \
-        -v </path/to/recdir>:/save \
-        -v </path/to/logdir>:/log \
-        -e TZ=UTC \
-        ctbcap -h
-        ```
-        > Option `-u <UID>:<GID>` allows you to specify the user (UID) and group (GID) that the container will run as. For example, `-u 65534:65534` will run the container as the 'nobody'. If you don't specify `-u`, the container will running as `1000:1000`.\
-        > `-u $(id -u):$(id -g)` Will use your current UID and GID.
+     # Check the status of the daemon:
+     docker compose -f ./ctbcap-compose.yml logs -f
 
-        > For more container arguments, see: [Container Arguments](#container-arguments)
+     # Stop & remove the daemon:
+     docker compose -f ./ctbcap-compose.yml down --remove-orphans
+     ```
 
-     - **Run as Daemon (man!!)**:
+#### **Run with Docker CLI:**
 
-       1. Custom your own docker-compose file:
+```shell
+docker run -t --rm \
+-u $(id -u):$(id -g) \
+-v </path/to/recdir>:/save \
+-v </path/to/logdir>:/log \
+-e TZ=Asia/Shanghai \
+-e <ARG>=<value> \
+... \
+kfermercer/ctbcap -h
+```
 
-          ```shell
-          cat ./docker-compose.sample.yml > ./compose.yml
-          ```
-          Then edit `./compose.yml` to configure.
+> Option `-u <UID>:<GID>` allows you to specify the user (UID) and group (GID) that the container will run as. For example, `-u 65534:65534` will run the container as the 'nobody'. If you don't specify `-u`, the container will running as `1000:1000`.\
+> `-u $(id -u):$(id -g)` Will use your current UID and GID.
 
-       2. Deploy the compose service:
+> For more container arguments, see: [Container Arguments](#container-arguments)
 
-          ```shell
-          # Run by background daemon:
-          docker compose up -d --remove-orphans
+#### **Update the Container Image:**
 
-          # stop the daemon:
-          docker compose down --remove-orphans
-          ```
+> See [Official CtbCap Container Registry](#official-ctbcap-container-registry).
 
-### Follow Update:
-
-  1. Go to local repo:
-
-      ```shell
-      cd chaturbate-grabber
-      ```
-
-  2. Update repo to newest commit:
-
-      ```shell
-      git pull --rebase
-      ```
-
-  3. Rebuild image & upgrade containers:
-
-      ```shell
-      # Rebuild image
-      docker build -t ctbcap ./
-
-      # Upgrade container
-      docker compose up -d --remove-orphans
-      ```
-
-### Container Arguments:
+### **Container Arguments:**
 
 | Arguments | Value Type | Value Examples | Default | Necessary to Change |
 | :-: | :-: | :- | :- | :-: |
-| MODEL | Streamer's Username <br> or <br> Chatroom URL | `tri80085` <br> `s1mp_L0r3-87` <br> `https://chaturbate.com/your_sister` <br> `https://stripchat.com/dicklessman` <br> ... | - | Yes |
+| MODEL | Streamer's Username <br> or <br> Chatroom URL | `3rd8008` <br> `s1mp_L0r3-87` <br> `https://chaturbate.com/your_sister` <br> `https://stripchat.com/dicklessman` <br> ... | - | Yes |
 | PLATFORM | `chaturbate` <br> or <br> `stripchat` | `chaturbate` <br> `stripchat` | `chaturbate` | Yes <br> if not Chaturbate |
 | CUT_TIME | INT | `0` <br> `911` <br> `6324` <br> ... | `3600` | No |
 | TZ | [TZ identifier](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List) | `UTC` <br> `Asia/Shanghai` <br> `Africa/Harare` <br> ... | `UTC` | No <br> if you [live in Greenwich](https://www.royalgreenwich.gov.uk/info/200258/parking_transport_and_streets/810/find_a_public_toilet_in_royal_greenwich) |
@@ -168,92 +116,82 @@
 
 <div align="center"><h2>Command Examples</h2></div>
 
-> ### Get help for commands:
+#### Get help for commands:
 
 ```shell
-# Raw ENV:
+# Local:
 ./ctbcap -h
 
 # One-Command Run:
-sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -h
+sh -c "$(curl -sL https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -h
 
 # Docker CLI:
-docker run -t --rm ctbcap -h
+docker run -t --rm kfermercer/ctbcap -h
 ```
 
-> ### Show version & runtime info:
+#### Simping your girl with nonstop:
 
 ```shell
-# Raw ENV:
-./ctbcap -v
-
-# One-Command Run:
-sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -v
-
-# Docker CLI:
-docker run -t --rm -u <UID>:<GID> ctbcap -v
-```
-
-> ### Simping your girl with nonstop:
-
-```shell
-# Raw ENV:
+# Local:
 ./ctbcap -f </path/to/recdir> your_girl
 
 # One-Command Run:
-sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -f </path/to/recdir> your_girl
+sh -c "$(curl -sL https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -f </path/to/recdir> your_girl
 
 # Docker CLI:
-docker run -t --rm -u <UID>:<GID> -v </path/to/recdir>:/save ctbcap your_girl
+docker run -t --rm -u <UID>:<GID> -v </path/to/recdir>:/save kfermercer/ctbcap your_girl
 ```
 
-> ### Simping your girl's stream and don't cut the file (cut the files every 3600 seconds by default) :
+#### Grab stream URL and generating FFmpeg command, but don't start recording:
 
 ```shell
-# Raw ENV:
-./ctbcap -f </path/to/recdir> -c 0 your_girl
-
-# One-Command Run:
-sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -f </path/to/recdir> -c 0 your_girl
-
-# Docker CLI:
-docker run -t --rm -u <UID>:<GID> -v </path/to/recdir>:/save ctbcap -c 0 your_girl
-```
-
-> ### Simping your girl's stream and cut the files by every 1800 seconds (30 min) :
-
-```shell
-# Raw ENV:
-./ctbcap -f </path/to/recdir> -c 1800 your_girl
-
-# One-Command Run:
-sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -f </path/to/recdir> -c 1800 your_girl
-
-# Docker CLI:
-docker run -t --rm -u <UID>:<GID> -v </path/to/recdir>:/save ctbcap -c 1800 your_girl
-```
-
-> ### Just wanna check if your girl is online:
-
-```shell
-# Raw ENV:
+# Local:
 ./ctbcap -l your_girl
 
 # One-Command Run:
-sh -c "$(curl -s -L https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -l your_girl
+sh -c "$(curl -sL https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -l your_girl
 
 # Docker CLI:
-docker run -t --rm ctbcap -l your_girl
+docker run -t --rm kfermercer/ctbcap -l your_girl
 ```
 
-> ### Check the status of compose daemons:
+#### Simping your girl's stream and don't cut the file (cut the files every 3600 seconds by default) :
 
 ```shell
-# All daemons:
-docker compose -f </path/to/local/repo/compose.yml> logs -f
+# Local:
+./ctbcap -f </path/to/recdir> -c 0 your_girl
 
-# Single model:
-docker compose -f </path/to/local/repo/compose.yml> logs -f your_girl
+# One-Command Run:
+sh -c "$(curl -sL https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -f </path/to/recdir> -c 0 your_girl
+
+# Docker CLI:
+docker run -t --rm -u <UID>:<GID> -v </path/to/recdir>:/save kfermercer/ctbcap -c 0 your_girl
+```
+
+#### Simping your girl's stream and cut the files by every 1800 seconds (30 min) :
+
+```shell
+# Local:
+./ctbcap -f </path/to/recdir> -c 1800 your_girl
+
+# One-Command Run:
+sh -c "$(curl -sL https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -f </path/to/recdir> -c 1800 your_girl
+
+# Docker CLI:
+docker run -t --rm -u <UID>:<GID> -v </path/to/recdir>:/save kfermercer/ctbcap -c 1800 your_girl
+```
+
+#### Show version & runtime info:
+
+```shell
+# Local:
+./ctbcap -v
+
+# One-Command Run:
+sh -c "$(curl -sL https://raw.githubusercontent.com/KFERMercer/chaturbate-grabber/master/ctbcap)" @ -v
+
+# Docker CLI:
+docker run -t --rm -u <UID>:<GID> kfermercer/ctbcap -v
 ```
 
 <div align="center"><h2>Branch Description</h2></div>
@@ -264,4 +202,4 @@ docker compose -f </path/to/local/repo/compose.yml> logs -f your_girl
 
 ##
 
-<p align="center"><code>(. Y .)</code></p>
+<p align="center"><code>(. )( .)</code></p>

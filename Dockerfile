@@ -5,8 +5,11 @@
 # By doing so, it will significantly reduce the size of final image. ( 140MB -> 18MB )
 # Requires 1GB of free space on file system to build.
 #
+# Make a normal build:
+# `docker build --tag ctbcap ./`
+#
 # If you don't want to compile FFmpeg:
-# `docker build --build-arg BUILD_TARGET=fat --target fat -t <name:tag> ./`
+# `docker build --build-arg BUILD_TARGET=fat --target fat --tag ctbcap ./`
 #
 
 # Universal base for ctbcap and FFmpeg building.
@@ -42,38 +45,26 @@ ENV CUT_TIME=3600
 ENV EDGING_MODE="uncle makes me pee white"
 ENV DEBUG_MODE="your mom is so hot"
 
-COPY --chmod=755 <<-'EOF' /bin/healthcheck
+COPY --chmod=755 <<-'EOF' /usr/bin/ctbcap-healthcheck
 	#!/usr/bin/env sh
 
 	[ "${DEBUG_MODE}" = "1" ] && set -x # Debug Mode
 
-	# Check for assignment of runtime variables
-	[ -z "${MODEL}" ] || [ -z "${PLATFORM}" ] || [ -z "${SAVE_PATH}" ] || [ -z "${LOG_PATH}" ] && exit 0
+	[ -z "${MODEL}" ] || [ -z "$(ps -ef | grep 'ctbcap' | grep -v grep | head -n 1)" ] && {
+		echo "No ctbcap process. Exit."
+		exit 0
+	}
 
 	# Process ${MODEL}
 	# TODO: Model may change their name, consider using realtime name.
-	# Assume ${MODEL} contain some link form, process & cut invalid chars.
-	_MODEL="$(echo "${MODEL}" \
-		| tr '[:upper:]' '[:lower:]' \
-		| grep -oE 'http[s]?://[a-z0-9-]?+[.]?[a-z0-9-]+[.][a-z]+[/][^ /]+' \
-		| cut -d '/' -f4 \
-		| grep -oE '[a-z0-9_-]+' \
-		| head -n 1)"
-	[ -n "${_MODEL}" ] && MODEL="${_MODEL}"
-	# If ${MODEL} not URL form, cut invalid chars.
-	[ -z "${_MODEL}" ] && _MODEL="$(echo "${MODEL}" | tr '[:upper:]' '[:lower:]'| grep -oE '[a-z0-9_-]+' | head -n 1)"
-	[ -z "${_MODEL}" ] && { echo "(ERROR) Invalid Username or Link!"; exit 1; }
-	[ -n "${_MODEL}" ] && MODEL="${_MODEL}"
+	MODEL="$(basename "${MODEL}" | head -n 1 | tr '[:upper:]' '[:lower:]' | grep -oE '^[a-z0-9_-]+$')"
+	[ -z "${MODEL}" ] && { echo "(ERROR) Invalid Username or URL!"; exit 1; }
 
-	# Process $PLATFORM
+	# Process ${PLATFORM}
 	PLATFORM=$(echo "${PLATFORM}" | tr '[:upper:]' '[:lower:]')
 	case ${PLATFORM} in
-	chaturbate|ctb|cb)
-		PLATFORM=chaturbate
-	;;
-	stripchat|stc|sc|st)
-		PLATFORM=stripchat
-	;;
+	chaturbate|ctb|cb) PLATFORM=chaturbate ;;
+	stripchat|stc|sc|st) PLATFORM=stripchat ;;
 	*)
 		echo "(ERROR) Invalid Platform!"
 		exit 1
@@ -82,21 +73,23 @@ COPY --chmod=755 <<-'EOF' /bin/healthcheck
 
 	# Is directories writable?
 	[ ! -w "${SAVE_PATH}" ] && { echo "(ERROR) SAVE_PATH is unwritable!"; exit 1; }
-	[ ! -w "${LOG_PATH}" ] && { echo "(ERROR) LOG_PATH is unwritable!"; exit 1; }
+	[ "${LOG_PATH}" = 0 ] || {
+		[ ! -w "${LOG_PATH}" ] && { echo "(ERROR) LOG_PATH is unwritable!"; exit 1; }
+	}
 
-	# If Model currently online, set HTTP Status Code of m3u8 link as flag
-	[ -f "${LOG_PATH}/${MODEL}-${PLATFORM}.online" ] && {
-		STREAM_LINK="$(cat "${LOG_PATH}/${MODEL}-${PLATFORM}.online")"
+	FFMPEG_PROCESS="$(ps -ef | grep -oE "[f]fmpeg.*-i.*.m3u8.*${MODEL}.*.mkv" 2>/dev/null | head -n 1)"
+	# If has FFmpeg process...
+	[ -n "${FFMPEG_PROCESS}" ] && {
+		STREAM_URL="$(echo "${FFMPEG_PROCESS}" | grep -oE 'http[s]?://[^ ]+\.m3u8')"
 		UA="$(ctbcap -v | grep '^UA: ' | sed 's|UA: ||')"
 		[ -z "${UA}" ] && { echo "(ERROR) UA does not exist!"; exit 1; }
-		# Has ffmpeg process, but m3u8 link is unavailable --> err
-		FFMPEG_PROCESS=$(ps -ef | grep -oE "[f]fmpeg.*-i.*.m3u8.*${MODEL}.*.mkv" 2>/dev/null)
-		M3U8_RESPONSE=$(curl "${STREAM_LINK}" -4 -L -s -A "${UA}" --compressed --retry 3 --retry-delay 2 2>/dev/null | tr -d '\r')
-		[ -n "${FFMPEG_PROCESS}" ] && [ -z "${M3U8_RESPONSE}" ] && { echo "(ERROR) FFMPEG process did not exit correctly!"; exit 1; }
+
+		# Has FFmpeg process, but m3u8 URL is unavailable --> err
+		M3U8_RESPONSE="$(curl "${STREAM_URL}" -4 -L -s -A "${UA}" --compressed --retry 3 --retry-delay 2 2>/dev/null | tr -d '\r')"
+		[ -z "${M3U8_RESPONSE}" ] && { echo "(ERROR) FFMPEG process did not exit correctly!"; exit 1; }
 	}
 
 	echo "Everything is OK!"
-
 	exit 0
 EOF
 
@@ -106,7 +99,7 @@ HEALTHCHECK \
 	--start-period=300s \
 	--start-interval=300s \
 	--retries=3 \
-	CMD ["healthcheck"]
+	CMD ["ctbcap-healthcheck"]
 
 ENTRYPOINT ["tini", "-g", "--", "ctbcap"]
 
@@ -135,7 +128,7 @@ FROM mother AS builder
 RUN apk add --no-cache build-base gnupg openssl-dev nasm zlib-dev
 
 RUN <<EOT
-	cat <<-EOK | gpg --import
+	cat <<-EOK | gpg --import # FFmpeg public PGP key
 		-----BEGIN PGP PUBLIC KEY BLOCK-----
 
 		mQENBE22rV0BCAC3DzRmA2XlhrqYv9HKoEvNHHf+PzosmCTHmYhWHDqvBxPkSvCl
@@ -211,14 +204,13 @@ RUN <<EOT
 		--disable-doc \
 		--disable-programs --enable-ffmpeg \
 		--disable-shared --enable-static \
-		--enable-zlib \
-		--enable-openssl \
+		--enable-zlib --enable-openssl \
 		--enable-decoder=h264,hevc,av1,aac \
 		--enable-parser=h264,hevc,av1,aac \
-		--enable-demuxer=hls,h264,hevc,av1,mp4,m4v,mpegts \
-		--enable-muxer=h264,hevc,av1,segment,matroska \
-		--enable-bsf=extract_extradata \
-		--enable-protocol=hls,http,https,file
+		--enable-demuxer=hls,mp4,m4v,mpegts \
+		--enable-muxer=segment,matroska \
+		--enable-protocol=hls,http,https,file \
+		--enable-bsf=extract_extradata
 EOT
 
 RUN <<EOT
